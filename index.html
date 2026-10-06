@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhinav Satsangi | CyberVigil Portfolio</title>
+    <meta name="description" content="CyberVigil Portfolio - Abhinav Satsangi / CYB3R.V1GIL. Ethical Hacking, Offensive Security & AI Security.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --bg-base: #020504;
+            --primary: #10b981;
+            --primary-dim: #0ecf8a;
+            --secondary: #22d3ee;
+            --tertiary: #a78bfa;
+            --text-main: #e8f0eb;
+            --text-muted: #aabfb3;
+            --text-dim: #607a6c;
+            
+            --grid-line-color: rgba(16, 185, 129, 0.05); /* Default, overridden by JS */
+            --bg-blob-color: rgba(16, 185, 129, 0.05);
+            
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --z-grid: 0;
+            --z-blob: 0;
+            --z-canvas: 2;
+            --z-tint: 3;
+            --z-content: 10;
+            --z-header: 200;
+            --z-scanlines: 9990;
+            --z-cursor: 9999;
+        }
+
+        /* RESET & BASE */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.85;
+            overflow-x: hidden;
+            cursor: none; /* Handled by custom cursor */
+        }
+        
+        a { color: inherit; text-decoration: none; cursor: none; }
+        button { cursor: none; font-family: inherit; }
+        ul { list-style: none; }
+
+        /* BACKGROUND LAYERS */
+        .bg-grid {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background-image: 
+                linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: var(--z-grid);
+            pointer-events: none;
+            animation: gridScroll 20s linear infinite;
+        }
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(40px); }
+        }
+
+        .bg-blob {
+            position: fixed; top: 50%; left: 50%;
+            width: 80vw; height: 80vw;
+            max-width: 800px; max-height: 800px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--bg-blob-color) 0%, transparent 70%);
+            z-index: var(--z-blob);
+            pointer-events: none;
+            animation: blobPulse 8s ease-in-out infinite alternate;
+        }
+        @keyframes blobPulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        #season-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: var(--z-canvas); pointer-events: none;
+        }
+        #season-tint {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: var(--z-tint); pointer-events: none;
+        }
+        #storm-flash {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #fff; opacity: 0;
+            z-index: var(--z-tint); pointer-events: none;
+            transition: opacity 0.12s ease-out;
+        }
+
+        /* CUSTOM CURSOR & EFFECTS */
+        .c-dot, .c-ring {
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: var(--z-cursor);
+        }
+        .c-dot {
+            width: 6px; height: 6px;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+        .c-ring {
+            width: 24px; height: 24px;
+            border: 1px solid var(--primary-dim);
+            transition: width 0.2s, height 0.2s;
+        }
+        .cursor-hover .c-ring { width: 40px; height: 40px; border-color: var(--secondary); }
+        .cursor-hover .c-dot { background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+
+        .scanlines::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+            opacity: 0.03; z-index: var(--z-scanlines); pointer-events: none;
+        }
+
+        /* TYPOGRAPHY & UTILS */
+        .h-display { font-family: var(--font-display); font-weight: 700; }
+        .h-section { font-family: var(--font-display); font-weight: 500; font-size: 2rem; margin-bottom: 2rem; color: var(--text-main); }
+        .mono { font-family: var(--font-mono); }
+        .text-muted { color: var(--text-muted); }
+        .text-dim { color: var(--text-dim); }
+        .text-primary { color: var(--primary); }
+        .text-secondary { color: var(--secondary); }
+        .text-tertiary { color: var(--tertiary); }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: var(--z-content); }
+        section { padding: 6rem 0; }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* HEADER */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(2, 5, 4, 0.7); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            z-index: var(--z-header); padding: 1rem 0;
+        }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; position: relative; color: var(--text-main); }
+        
+        .logo:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+        @keyframes glitch {
+            0% { text-shadow: -2px 0 red, 2px 0 cyan; clip-path: inset(10% 0 80% 0); }
+            20% { text-shadow: 2px 0 red, -2px 0 cyan; clip-path: inset(40% 0 20% 0); }
+            40% { text-shadow: -2px 0 red, 2px 0 cyan; clip-path: inset(80% 0 10% 0); }
+            60% { text-shadow: 2px 0 red, -2px 0 cyan; clip-path: inset(20% 0 60% 0); }
+            80% { text-shadow: -2px 0 red, 2px 0 cyan; clip-path: inset(50% 0 30% 0); }
+            100% { text-shadow: 2px 0 red, -2px 0 cyan; clip-path: inset(10% 0 80% 0); }
+        }
+
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .sys-status { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary); border: 1px solid rgba(16,185,129,0.3); padding: 0.3rem 0.6rem; border-radius: 4px; background: rgba(16,185,129,0.05); }
+        .pulse-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+
+        /* HERO SECTION */
+        .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 5rem; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; width: 100%; }
+        .hero-eyebrow { color: var(--primary); font-size: 0.9rem; margin-bottom: 1rem; display: block; }
+        .hero-title { font-size: clamp(2.8rem, 5.2vw, 5.4rem); line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero-title span.dim-line { display: block; font-family: var(--font-mono); font-size: clamp(1.2rem, 2vw, 1.8rem); font-weight: 400; color: var(--text-muted); margin-top: 0.5rem; text-transform: none; }
+        .hero-desc { color: var(--text-muted); font-size: 1.1rem; max-width: 90%; margin-bottom: 2rem; }
+        .hero-stats { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim); }
+        .hero-stats span { display: flex; align-items: center; gap: 0.5rem; }
+        .hero-stats span::before { content: '>'; color: var(--primary); }
+        
+        .btn-group { display: flex; gap: 1rem; }
+        .btn { display: inline-block; padding: 0.8rem 1.5rem; font-family: var(--font-mono); font-size: 0.9rem; border-radius: 4px; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .btn-primary { background: rgba(16,185,129,0.1); border: 1px solid var(--primary); color: var(--primary); }
+        .btn-primary:hover { background: var(--primary); color: var(--bg-base); box-shadow: 0 0 15px rgba(16,185,129,0.4); }
+        .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); }
+        .btn-secondary:hover { border-color: var(--secondary); color: var(--secondary); }
+
+        /* TERMINAL */
+        .terminal { background: rgba(5,10,8,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .term-header { background: rgba(255,255,255,0.05); padding: 0.5rem 1rem; display: flex; gap: 0.5rem; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .term-btn { width: 12px; height: 12px; border-radius: 50%; }
+        .term-btn:nth-child(1) { background: #ff5f56; } .term-btn:nth-child(2) { background: #ffbd2e; } .term-btn:nth-child(3) { background: #27c93f; }
+        .term-body { padding: 1.5rem; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); }
+        .prompt::before { content: 'cyb3r@vigil:~$ '; color: var(--primary); }
+        .cmd { color: var(--text-main); }
+        .out { color: var(--text-dim); margin-bottom: 1rem; margin-top: 0.5rem; white-space: pre; }
+        .term-cursor { display: inline-block; width: 8px; height: 1.1em; background-color: var(--primary); vertical-align: middle; animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ABOUT */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+        .about-text p { margin-bottom: 1rem; color: var(--text-muted); }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .info-chip { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 6px; display: flex; flex-direction: column; gap: 0.3rem; }
+        .info-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+        .info-val { font-size: 0.9rem; color: var(--text-main); font-weight: 500; }
+
+        /* SKILLS */
+        .skills-table { width: 100%; border-collapse: collapse; }
+        .skills-row { border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.3s; }
+        .skills-row:hover { background: rgba(255,255,255,0.015); }
+        .skills-row td { padding: 1.5rem 1rem; vertical-align: middle; }
+        .skill-cat { font-family: var(--font-display); font-weight: 500; color: var(--text-main); width: 30%; }
+        .skill-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; pointer-events: none; }
+        .badge { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.3rem 0.8rem; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); }
+        .badge.primary { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.2); color: var(--primary); }
+        .badge.cyan { background: rgba(34,211,238,0.08); border-color: rgba(34,211,238,0.2); color: var(--secondary); }
+        .badge.purple { background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.2); color: var(--tertiary); }
+
+        /* METHODOLOGY */
+        .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+        .method-card { background: rgba(2,5,4,0.5); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; position: relative; transition: all 0.3s ease; }
+        .method-card:hover { border-color: rgba(16,185,129,0.3); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(16,185,129,0.05); }
+        .method-num { font-family: var(--font-mono); font-size: 2rem; color: rgba(16,185,129,0.2); position: absolute; top: 1rem; right: 1rem; line-height: 1; font-weight: 700; transition: color 0.3s; }
+        .method-card:hover .method-num { color: var(--primary); }
+        .method-title { font-family: var(--font-display); font-weight: 500; margin-bottom: 0.5rem; margin-top: 1rem; }
+        .method-desc { font-size: 0.85rem; color: var(--text-dim); }
+
+        /* PROJECTS */
+        .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .proj-card { background: rgba(2,5,4,0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden; transition: all 0.3s; display: flex; flex-direction: column; }
+        .proj-card:hover { transform: translateY(-5px); }
+        .proj-card.c-green:hover { border-color: rgba(16,185,129,0.4); box-shadow: 0 10px 30px rgba(16,185,129,0.1); }
+        .proj-card.c-cyan:hover { border-color: rgba(34,211,238,0.4); box-shadow: 0 10px 30px rgba(34,211,238,0.1); }
+        .proj-card.c-purple:hover { border-color: rgba(167,139,250,0.4); box-shadow: 0 10px 30px rgba(167,139,250,0.1); }
+        
+        .proj-vis { height: 140px; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .proj-card.c-green .proj-vis { background: linear-gradient(45deg, rgba(16,185,129,0.05), transparent); }
+        .proj-card.c-cyan .proj-vis { background: linear-gradient(45deg, rgba(34,211,238,0.05), transparent); }
+        .proj-card.c-purple .proj-vis { background: linear-gradient(45deg, rgba(167,139,250,0.05), transparent); }
+        .circuit-svg { width: 100%; height: 100%; opacity: 0.3; }
+        
+        .proj-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+        .proj-badge { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem; display: inline-block; }
+        .c-green .proj-badge { color: var(--primary); } .c-cyan .proj-badge { color: var(--secondary); } .c-purple .proj-badge { color: var(--tertiary); }
+        .proj-title { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.8rem; }
+        .proj-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; flex: 1; }
+        
+        .proj-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; margin-top: auto; font-family: var(--font-mono); font-size: 0.75rem; }
+        .proj-status { display: flex; align-items: center; gap: 0.4rem; color: var(--text-dim); }
+        .proj-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+        .c-green .proj-status::before { background: var(--primary); }
+        .c-cyan .proj-status::before { background: var(--secondary); }
+        .c-purple .proj-status::before { background: var(--tertiary); }
+        .proj-link { color: var(--text-main); transition: opacity 0.2s; }
+        .proj-link:hover { opacity: 0.7; }
+
+        /* EXPLORING */
+        .exploring-banner { background: rgba(34,211,238,0.03); border: 1px solid rgba(34,211,238,0.1); border-radius: 8px; padding: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
+        .exp-header { display: flex; align-items: center; gap: 0.8rem; font-family: var(--font-mono); color: var(--secondary); font-size: 0.9rem; }
+        .exp-pulse { width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; box-shadow: 0 0 10px var(--secondary); animation: pulse 2s infinite; }
+        .exp-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; }
+        .exp-tag { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; color: var(--text-main); }
+
+        /* JOURNEY & CERTS */
+        .jc-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; }
+        .timeline { position: relative; padding-left: 1.5rem; border-left: 1px solid rgba(255,255,255,0.1); }
+        .tl-item { margin-bottom: 2.5rem; position: relative; }
+        .tl-item::before { content: ''; position: absolute; left: -1.8rem; top: 0.3rem; width: 10px; height: 10px; border-radius: 50%; background: var(--bg-base); border: 2px solid var(--primary); }
+        .tl-year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--primary); margin-bottom: 0.3rem; }
+        .tl-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-main); margin-bottom: 0.2rem; }
+        .tl-org { font-size: 0.85rem; color: var(--text-dim); }
+
+        .certs-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .cert-card { display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; }
+        .cert-icon { font-size: 1.5rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); border-radius: 6px; }
+        .cert-info { flex: 1; }
+        .cert-name { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.2rem; }
+        .cert-org { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); }
+
+        /* PHILOSOPHY */
+        .philosophy { text-align: center; max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+        .quote { font-size: 1.8rem; font-family: var(--font-display); font-style: italic; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem; }
+        .quote span { color: var(--primary); font-style: normal; }
+        .attribution { font-family: var(--font-mono); color: var(--text-dim); font-size: 0.9rem; }
+
+        /* CONTACT */
+        .contact-card { background: rgba(2,5,4,0.8); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 4rem 3rem; text-align: center; position: relative; overflow: hidden; }
+        .contact-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
+        .contact-h { font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 1rem; }
+        .contact-h span { color: var(--primary); }
+        .contact-p { color: var(--text-muted); margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .social-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+        .social-btn { padding: 0.8rem 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; font-family: var(--font-mono); font-size: 0.85rem; transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .social-btn:hover { background: rgba(16,185,129,0.1); border-color: var(--primary); color: var(--primary); transform: translateY(-3px); }
+
+        /* FOOTER */
+        footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 0; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim); }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .f-left { display: flex; align-items: center; gap: 1rem; }
+        .season-badge { background: rgba(255,255,255,0.03); padding: 0.3rem 0.6rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 0.5rem; font-size: 0.65rem; }
+
+        /* WINTER FROST EDGE - CSS ONLY */
+        .season-winter .proj-card::before, .season-winter .method-card::before, .season-winter .terminal::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            border: 1px solid rgba(200,230,255,0.08); box-shadow: inset 0 0 20px rgba(180,210,255,0.04);
+            pointer-events: none; border-radius: inherit; z-index: 10;
+        }
+
+        /* MEDIA QUERIES */
+        @media (max-width: 1024px) {
+            .hero-grid, .about-grid, .jc-grid { gap: 2rem; }
+        }
+        @media (max-width: 800px) {
+            .nav-links { display: none; }
+            .hero-grid, .about-grid, .jc-grid { grid-template-columns: 1fr; }
+            .terminal { margin-top: 2rem; }
+            .skills-cat { width: 100%; display: block; margin-bottom: 0.5rem; }
+            .skills-row td { display: block; padding: 1rem 0; border: none; }
+            .skills-row { border-bottom: 1px solid rgba(255,255,255,0.05); }
+            section { padding: 4rem 0; }
+        }
+        @media (hover: none) and (pointer: coarse) {
+            body, a, button { cursor: auto; }
+            .c-dot, .c-ring { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .bg-grid, .bg-blob, .reveal, .c-ring, .logo, .term-cursor { animation: none; transition: none; }
+            .reveal { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="season-detecting">
+
+    <!-- BACKGROUND LAYERS -->
+    <div class="bg-grid"></div>
+    <div class="bg-blob"></div>
+    <canvas id="season-canvas"></canvas>
+    <div id="season-tint"></div>
+    <div id="storm-flash"></div>
+    <div class="scanlines"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="c-dot"></div>
+    <div class="c-ring"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="container nav-inner">
+            <a href="#" class="logo">CYB3R.V1GIL</a>
+            <nav class="nav-links">
+                <a href="#about" class="cursor-hover-target">01. About</a>
+                <a href="#skills" class="cursor-hover-target">02. Skills</a>
+                <a href="#projects" class="cursor-hover-target">03. Projects</a>
+                <a href="#contact" class="cursor-hover-target">04. Contact</a>
+            </nav>
+            <div class="sys-status">
+                <div class="pulse-dot"></div>
+                SYS_ONLINE
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content reveal">
+                    <span class="hero-eyebrow mono">identity.json loaded</span>
+                    <h1 class="hero-title h-display">
+                        Secure<br>The Digital.<br>
+                        <span class="dim-line">Build The Future.</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Ethical Hacker, AI Security Enthusiast, and Computer Science scholar bridging the gap between offensive security and robust system architectures.
+                    </p>
+                    <div class="hero-stats">
+                        <span>15+ Certs</span>
+                        <span>2 APAC Cohorts</span>
+                        <span>3+ Internships</span>
+                        <span>∞ Curiosity</span>
+                    </div>
+                    <div class="btn-group">
+                        <a href="#projects" class="btn btn-primary cursor-hover-target">View Projects</a>
+                        <a href="#contact" class="btn btn-secondary cursor-hover-target">Initialize Contact</a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual reveal">
+                    <div class="terminal">
+                        <div class="term-header">
+                            <div class="term-btn"></div>
+                            <div class="term-btn"></div>
+                            <div class="term-btn"></div>
+                        </div>
+                        <div class="term-body">
+                            <div class="prompt"><span class="cmd">cat identity.json</span></div>
+                            <div class="out">{
+  "name": "Abhinav Satsangi",
+  "alias": "CYB3R.V1GIL",
+  "role": "Security Researcher",
+  "location": "Agra, IN",
+  "focus": ["Offensive Sec", "AI"]
+}</div>
+                            <div class="prompt"><span class="cmd">nmap --skills self</span></div>
+                            <div class="out">Starting Nmap 7.93...
+PORT     STATE SERVICE
+80/tcp   open  web-pentest
+443/tcp  open  encryption
+8080/tcp open  api-sec
+3306/tcp open  db-exploit
+9999/tcp open  ai-redteam</div>
+                            <div class="prompt"><span class="term-cursor"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="container">
+            <h2 class="h-section reveal"><span class="text-primary mono">01.</span> /about_me</h2>
+            <div class="about-grid reveal">
+                <div class="about-text">
+                    <p>I am a Computer Science & Engineering undergraduate at IET Khandari (Dr. Bhimrao Ambedkar University), specializing in the intersection of traditional cybersecurity and emerging AI paradigms.</p>
+                    <p>Operating under the moniker CyberVigil, I approach security with an offensive mindset—understanding how systems break is the critical first step to building them resiliently.</p>
+                    <p>My methodology is grounded in curiosity and hands-on exploration, transitioning from classical web vulnerabilities to local LLM security and automated reconnaissance tooling.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-chip">
+                        <span class="info-label">Degree</span>
+                        <span class="info-val">BTech CSE</span>
+                    </div>
+                    <div class="info-chip">
+                        <span class="info-label">University</span>
+                        <span class="info-val">DBRAU</span>
+                    </div>
+                    <div class="info-chip">
+                        <span class="info-label">Specialization</span>
+                        <span class="info-val">Offensive Sec · AI</span>
+                    </div>
+                    <div class="info-chip">
+                        <span class="info-label">Brand</span>
+                        <span class="info-val">CyberVigil</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills" class="container">
+            <h2 class="h-section reveal"><span class="text-primary mono">02.</span> /capabilities</h2>
+            <div class="reveal">
+                <table class="skills-table">
+                    <tr class="skills-row">
+                        <td class="skill-cat">Offensive Security</td>
+                        <td>
+                            <div class="skill-badges">
+                                <span class="badge primary">Web Pentesting</span>
+                                <span class="badge primary">OWASP Top 10</span>
+                                <span class="badge primary">Reconnaissance</span>
+                                <span class="badge primary">Bug Bounty</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="skills-row">
+                        <td class="skill-cat">Tools & Platforms</td>
+                        <td>
+                            <div class="skill-badges">
+                                <span class="badge">Burp Suite</span>
+                                <span class="badge">Nmap</span>
+                                <span class="badge">Metasploit</span>
+                                <span class="badge">Wireshark</span>
+                                <span class="badge">Linux CLI</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="skills-row">
+                        <td class="skill-cat">Programming</td>
+                        <td>
+                            <div class="skill-badges">
+                                <span class="badge">Python</span>
+                                <span class="badge">Bash</span>
+                                <span class="badge">C++</span>
+                                <span class="badge">JavaScript</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="skills-row">
+                        <td class="skill-cat">Systems & Networks</td>
+                        <td>
+                            <div class="skill-badges">
+                                <span class="badge">TCP/IP</span>
+                                <span class="badge">OSI Model</span>
+                                <span class="badge">DNS/HTTP</span>
+                                <span class="badge">Active Directory</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="skills-row">
+                        <td class="skill-cat">AI & Cloud</td>
+                        <td>
+                            <div class="skill-badges">
+                                <span class="badge cyan">Google Cloud (GCP)</span>
+                                <span class="badge purple">Local LLMs (Ollama)</span>
+                                <span class="badge purple">AI Red Teaming</span>
+                                <span class="badge cyan">Gen AI</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- METHODOLOGY -->
+        <section class="container">
+            <h2 class="h-section reveal"><span class="text-primary mono">03.</span> /methodology</h2>
+            <div class="method-grid reveal">
+                <div class="method-card">
+                    <span class="method-num">01</span>
+                    <h3 class="method-title">Discover & Recon</h3>
+                    <p class="method-desc">Extensive mapping of attack surfaces, subdomains, and open ports to identify invisible assets.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">02</span>
+                    <h3 class="method-title">Analyze Weaknesses</h3>
+                    <p class="method-desc">Mapping data flows and analyzing configurations against OWASP Top 10 vulnerabilities.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">03</span>
+                    <h3 class="method-title">Exploit Responsibly</h3>
+                    <p class="method-desc">Controlled testing to prove impact without disrupting underlying business services.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">04</span>
+                    <h3 class="method-title">Validate Findings</h3>
+                    <p class="method-desc">Ensuring true positives by meticulously verifying exploitation vectors and chaining.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">05</span>
+                    <h3 class="method-title">Remediate & Report</h3>
+                    <p class="method-desc">Delivering structured markdown dossiers with clear patching guidelines.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="container">
+            <h2 class="h-section reveal"><span class="text-primary mono">04.</span> /deployments</h2>
+            <div class="proj-grid reveal">
+                <!-- Project 1 -->
+                <a href="#" class="proj-card c-green cursor-hover-target">
+                    <div class="proj-vis">
+                        <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,20 L30,20 L40,30 L100,30 M0,70 L40,70 L50,60 L100,60 M20,0 L20,40 L30,50 M80,100 L80,50 L70,40" stroke="var(--primary)" stroke-width="1" fill="none" />
+                            <circle cx="40" cy="30" r="2" fill="var(--primary)"/>
+                            <circle cx="50" cy="60" r="2" fill="var(--primary)"/>
+                            <circle cx="30" cy="50" r="2" fill="var(--primary)"/>
+                        </svg>
+                    </div>
+                    <div class="proj-body">
+                        <span class="proj-badge">AI Security</span>
+                        <h3 class="proj-title">Private AI Sec Assistant</h3>
+                        <p class="proj-desc">Offline AI agent that inspects web endpoints, identifies flaws, and generates structured markdown patching dossiers without cloud data leakage.</p>
+                        <div class="proj-footer">
+                            <span class="proj-status">In Development</span>
+                            <span class="proj-link mono">Python, Ollama</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Project 2 -->
+                <a href="#" class="proj-card c-cyan cursor-hover-target">
+                    <div class="proj-vis">
+                        <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,40 L40,40 L50,20 L100,20 M0,80 L20,80 L30,90 M60,0 L60,30 L70,40 L100,40" stroke="var(--secondary)" stroke-width="1" fill="none" />
+                            <circle cx="50" cy="20" r="2" fill="var(--secondary)"/>
+                            <circle cx="30" cy="90" r="2" fill="var(--secondary)"/>
+                            <circle cx="70" cy="40" r="2" fill="var(--secondary)"/>
+                        </svg>
+                    </div>
+                    <div class="proj-body">
+                        <span class="proj-badge">Web Pentest</span>
+                        <h3 class="proj-title">DBRAU Scholar Pentest</h3>
+                        <p class="proj-desc">Authorized pentest on dbrauscholar.org. Conducted via OWASP Top 10 methodology resulting in a responsibly disclosed full vulnerability dossier.</p>
+                        <div class="proj-footer">
+                            <span class="proj-status">Disclosed</span>
+                            <span class="proj-link mono">Web, Manual Testing</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="#" class="proj-card c-purple cursor-hover-target">
+                    <div class="proj-vis">
+                        <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <path d="M0,50 L20,50 L30,30 L100,30 M0,90 L60,90 L70,70 L100,70 M40,0 L40,60 L30,70" stroke="var(--tertiary)" stroke-width="1" fill="none" />
+                            <circle cx="30" cy="30" r="2" fill="var(--tertiary)"/>
+                            <circle cx="70" cy="70" r="2" fill="var(--tertiary)"/>
+                            <circle cx="30" cy="70" r="2" fill="var(--tertiary)"/>
+                        </svg>
+                    </div>
+                    <div class="proj-body">
+                        <span class="proj-badge">Automation Toolkit</span>
+                        <h3 class="proj-title">CyberVigil Recon Toolkit</h3>
+                        <p class="proj-desc">Modular Python reconnaissance automation integrating subdomain enumeration, port scanning, and structured CLI dossier output.</p>
+                        <div class="proj-footer">
+                            <span class="proj-status">Planning Phase</span>
+                            <span class="proj-link mono">Python, CLI</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- CURRENTLY EXPLORING -->
+        <section class="container reveal">
+            <div class="exploring-banner">
+                <div class="exp-header">
+                    <div class="exp-pulse"></div>
+                    CURRENTLY EXPLORING
+                </div>
+                <div class="exp-tags mono">
+                    <span class="exp-tag">CTF Challenges</span>
+                    <span class="exp-tag">Binary Exploitation</span>
+                    <span class="exp-tag">Reverse Engineering</span>
+                    <span class="exp-tag">Bug Bounty Methodology</span>
+                    <span class="exp-tag">Cloud Security (GCP)</span>
+                    <span class="exp-tag">AI Red Teaming</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- JOURNEY & CERTS -->
+        <section class="container">
+            <h2 class="h-section reveal"><span class="text-primary mono">05.</span> /logs & credentials</h2>
+            <div class="jc-grid reveal">
+                <!-- Timeline -->
+                <div class="timeline">
+                    <div class="tl-item">
+                        <div class="tl-year">2026 - Current</div>
+                        <h4 class="tl-title">AI/ML Intern</h4>
+                        <div class="tl-org">Flyrank</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-year">2026</div>
+                        <h4 class="tl-title">Offensive Security Program</h4>
+                        <div class="tl-org">APCSIP2026</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-year">2025</div>
+                        <h4 class="tl-title">Cybersmart & AI Intern</h4>
+                        <div class="tl-org">NIIT Foundation</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-year">2024 - Present</div>
+                        <h4 class="tl-title">BTech CSE</h4>
+                        <div class="tl-org">IET Khandari, DBRAU</div>
+                    </div>
+                </div>
+
+                <!-- Certs -->
+                <div class="certs-grid">
+                    <div class="cert-card">
+                        <div class="cert-icon">🛡️</div>
+                        <div class="cert-info">
+                            <h4 class="cert-name">Ethical Hacker</h4>
+                            <span class="cert-org">Tutedude</span>
+                        </div>
+                    </div>
+                    <div class="cert-card">
+                        <div class="cert-icon">🔒</div>
+                        <div class="cert-info">
+                            <h4 class="cert-name">Cybersecurity Fundamentals</h4>
+                            <span class="cert-org">Tutedude</span>
+                        </div>
+                    </div>
+                    <div class="cert-card">
+                        <div class="cert-icon">🌐</div>
+                        <div class="cert-info">
+                            <h4 class="cert-name">Introduction to IoT</h4>
+                            <span class="cert-org">Stanford CGOE</span>
+                        </div>
+                    </div>
+                    <div class="cert-card">
+                        <div class="cert-icon">☁️</div>
+                        <div class="cert-info">
+                            <h4 class="cert-name">Google Cloud Gen AI Academy</h4>
+                            <span class="cert-org">APAC Edition, Cohorts 2 & 3</span>
+                        </div>
+                    </div>
+                    <div class="cert-card">
+                        <div class="cert-icon">📱</div>
+                        <div class="cert-info">
+                            <h4 class="cert-name">ESSCI Innovation Campus</h4>
+                            <span class="cert-org">Samsung Innovation Campus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHILOSOPHY -->
+        <section class="container reveal">
+            <div class="philosophy">
+                <p class="quote">"Understanding how digital ecosystems <span>break</span> is the fundamental prerequisite to building systems that <span>endure</span>."</p>
+                <div class="attribution">— Abhinav Satsangi / CYB3R.V1GIL</div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="container reveal">
+            <div class="contact-card">
+                <h2 class="contact-h">Initiate <span>Handshake</span></h2>
+                <p class="contact-p">Whether you have a vulnerability to patch, an AI red teaming inquiry, or a collaborative vision, my inbox is open.</p>
+                <div class="social-links">
+                    <a href="mailto:official.cyb3rvigil@gmail.com" class="social-btn cursor-hover-target">Email</a>
+                    <a href="https://github.com/Cyb3rVigil" target="_blank" rel="noopener noreferrer" class="social-btn cursor-hover-target">GitHub</a>
+                    <a href="https://www.linkedin.com/in/cyb3rv1gil/" target="_blank" rel="noopener noreferrer" class="social-btn cursor-hover-target">LinkedIn</a>
+                    <a href="https://tryhackme.com/p/Cyb3rV1gil" target="_blank" rel="noopener noreferrer" class="social-btn cursor-hover-target">TryHackMe</a>
+                    <a href="https://x.com/Cyb3rV1gil" target="_blank" rel="noopener noreferrer" class="social-btn cursor-hover-target">X/Twitter</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="container">
+        <div class="footer-inner">
+            <div class="f-left">
+                <span>© 2026 CyberVigil</span>
+                <span class="season-badge" id="season-badge-el">...</span>
+            </div>
+            <div class="f-right">
+                <a href="mailto:official.cyb3rvigil@gmail.com" class="cursor-hover-target">official.cyb3rvigil@gmail.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ----------------------------------------------------
+        // CORE LOGIC & CUSTOM CURSOR
+        // ----------------------------------------------------
+        const cursorDot = document.querySelector('.c-dot');
+        const cursorRing = document.querySelector('.c-ring');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+        let isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        if (!isTouchDevice && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            document.querySelectorAll('.cursor-hover-target').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            });
+
+            function renderCursor() {
+                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+                requestAnimationFrame(renderCursor);
+            }
+            requestAnimationFrame(renderCursor);
+        }
+
+        // SCROLL REVEAL
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ----------------------------------------------------
+        // SEASONAL BACKGROUND SYSTEM
+        // ----------------------------------------------------
+        const canvas = document.getElementById('season-canvas');
+        const ctx = canvas.getContext('2d');
+        const tint = document.getElementById('season-tint');
+        const flash = document.getElementById('storm-flash');
+        const badge = document.getElementById('season-badge-el');
+        
+        let width, height;
+        let particles = [];
+        let activeSeason = 'summer';
+        let isRafActive = true;
+        let time = 0;
+        let weatherFetched = false;
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', () => { resize(); initParticles(); });
+        resize();
+
+        // 1. Date based detection
+        function getDateSeason() {
+            const m = new Date().getMonth();
+            if (m >= 6 && m <= 8) return 'monsoon';
+            if (m >= 9 && m <= 10) return 'autumn';
+            if (m === 11 || m <= 1) return 'winter';
+            if (m >= 2 && m <= 3) return 'spring';
+            return 'summer';
+        }
+
+        // 2. Weather API override
+        async function fetchWeatherSeason() {
+            if (!navigator.geolocation) return;
+            try {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    try {
+                        const { latitude, longitude } = pos.coords;
+                        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                        if (!res.ok) return;
+                        const data = await res.json();
+                        const code = data.current_weather.weathercode;
+                        
+                        let wSeason = activeSeason;
+                        if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) wSeason = 'monsoon';
+                        else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) wSeason = 'winter';
+                        else if (code >= 95 && code <= 99) wSeason = 'storm';
+                        
+                        if (wSeason !== activeSeason) {
+                            activeSeason = wSeason;
+                            applySeasonConfigs();
+                            initParticles();
+                        }
+                    } catch(e) { /* silent fail */ }
+                }, () => { /* silent fail */ }, { timeout: 5000 });
+            } catch(e) { /* silent fail */ }
+        }
+
+        const seasonSpecs = {
+            'monsoon': {
+                tint: 'rgba(10, 30, 70, 0.12)', blend: 'multiply', grid: 'rgba(100, 160, 255, 0.05)', blob: 'rgba(100, 160, 255, 0.05)',
+                badge: '🌧️ Monsoon · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 120, cssClass: 'season-monsoon'
+            },
+            'storm': {
+                tint: 'rgba(0, 20, 60, 0.18)', blend: 'multiply', grid: 'rgba(80, 120, 255, 0.05)', blob: 'rgba(80, 120, 255, 0.05)',
+                badge: '⚡ Storm · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 200, cssClass: 'season-storm'
+            },
+            'winter': {
+                tint: 'rgba(160, 200, 240, 0.05)', blend: 'screen', grid: 'rgba(180, 210, 255, 0.06)', blob: 'rgba(100, 150, 220, 0.05)',
+                badge: '❄️ Winter · Agra, IN', badgeCol: '#dce8ff', pCount: 60, cssClass: 'season-winter'
+            },
+            'spring': {
+                tint: 'rgba(20, 180, 100, 0.04)', blend: 'screen', grid: 'rgba(16, 185, 129, 0.055)', blob: 'rgba(16, 185, 129, 0.07)',
+                badge: '🌸 Spring · Agra, IN', badgeCol: '#a7f3d0', pCount: 45, cssClass: 'season-spring'
+            },
+            'summer': {
+                tint: 'rgba(255, 160, 40, 0.06)', blend: 'multiply', grid: 'rgba(255, 180, 60, 0.04)', blob: 'rgba(255, 160, 40, 0.05)',
+                badge: '☀️ Summer · Agra, IN', badgeCol: '#fcd34d', pCount: 0, cssClass: 'season-summer'
+            },
+            'autumn': {
+                tint: 'rgba(180, 80, 20, 0.07)', blend: 'multiply', grid: 'rgba(200, 120, 40, 0.04)', blob: 'rgba(180, 100, 30, 0.05)',
+                badge: '🍂 Autumn · Agra, IN', badgeCol: '#fb923c', pCount: 35, cssClass: 'season-autumn'
+            }
+        };
+
+        function applySeasonConfigs() {
+            const spec = seasonSpecs[activeSeason];
+            tint.style.backgroundColor = spec.tint;
+            tint.style.mixBlendMode = spec.blend;
+            document.documentElement.style.setProperty('--grid-line-color', spec.grid);
+            document.documentElement.style.setProperty('--bg-blob-color', spec.blob);
+            badge.innerHTML = spec.badge;
+            badge.style.color = spec.badgeCol;
+            
+            document.body.className = document.body.className.replace(/season-\w+/g, '');
+            document.body.classList.add(spec.cssClass);
+        }
+
+        // Particle initializers
+        function initParticles() {
+            particles = [];
+            const isMobile = width < 768;
+            const mult = isMobile ? 0.5 : 1;
+            const spec = seasonSpecs[activeSeason];
+
+            if (activeSeason === 'monsoon' || activeSeason === 'storm') {
+                // Rain
+                const rCount = Math.floor(spec.rain * mult);
+                for(let i=0; i<rCount; i++) {
+                    particles.push({
+                        type: 'rain', x: Math.random() * width, y: Math.random() * height,
+                        len: 14 + Math.random() * 10, speed: (activeSeason==='storm'?18:12) + Math.random() * 10,
+                        alpha: 0.25 + Math.random() * 0.2
+                    });
+                }
+                // Drops on glass
+                const dCount = Math.floor(spec.drops * (isMobile ? 0.5 : 1));
+                for(let i=0; i<dCount; i++) {
+                    particles.push({
+                        type: 'drop',
+                        x: Math.random() * width, y: Math.random() * height,
+                        r: 18 + Math.random() * 27,
+                        opacity: 0, targetOpacity: 1, state: 'fadein',
+                        slideTime: 0, maxSlide: 180 + Math.random() * 200,
+                        path: []
+                    });
+                }
+            } 
+            else if (activeSeason === 'winter') {
+                const count = Math.floor(spec.pCount * mult);
+                for(let i=0; i<count; i++) {
+                    particles.push({
+                        x: Math.random() * width, y: Math.random() * height,
+                        r: 1.5 + Math.random() * 2.5, speed: 0.8 + Math.random() * 1.7,
+                        seed: Math.random() * 100, alpha: 0.5 + Math.random() * 0.3
+                    });
+                }
+            }
+            else if (activeSeason === 'spring') {
+                const count = Math.floor(spec.pCount * mult);
+                const cols = ['rgba(100,220,160,', 'rgba(180,240,180,', 'rgba(220,240,200,'];
+                for(let i=0; i<count; i++) {
+                    particles.push({
+                        x: Math.random() * width, y: Math.random() * height,
+                        r: 2 + Math.random() * 4, speed: 0.3 + Math.random() * 0.7,
+                        seed: Math.random() * 100, col: cols[i%3],
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+            else if (activeSeason === 'autumn') {
+                const count = Math.floor(spec.pCount * mult);
+                const cols = ['rgba(200,80,20,', 'rgba(180,120,20,', 'rgba(220,140,40,'];
+                for(let i=0; i<count; i++) {
+                    particles.push({
+                        x: Math.random() * width, y: Math.random() * height,
+                        w: 6 + Math.random()*6, h: 10 + Math.random()*8,
+                        speed: 1.5 + Math.random()*2, seed: Math.random() * 100,
+                        rot: Math.random() * Math.PI * 2, rotSpeed: (Math.random()-0.5)*0.04,
+                        col: cols[i%3], alpha: 0.5 + Math.random()*0.1
+                    });
+                }
+            }
+            // Summer handled via render loop directly
+        }
+
+        function drawRainDrop(p) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - p.len*0.2, p.y + p.len);
+            ctx.strokeStyle = `rgba(140, 200, 255, ${p.alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            p.y += p.speed;
+            p.x -= p.speed * 0.2;
+            if(p.y > height) { p.y = -p.len; p.x = Math.random() * width; }
+        }
+
+        function drawGlassDrop(p) {
+            if (p.state === 'fadein') {
+                p.opacity += 0.02;
+                if(p.opacity >= p.targetOpacity) p.state = 'slide';
+            } else if (p.state === 'slide') {
+                p.slideTime++;
+                p.y += (p.slideTime * 0.015);
+                p.path.push({x: p.x, y: p.y - p.r});
+                if(p.path.length > 30) p.path.shift();
+                if(p.slideTime > p.maxSlide || p.y > height + p.r) p.state = 'fadeout';
+            } else if (p.state === 'fadeout') {
+                p.opacity -= 0.05;
+                if(p.opacity <= 0) {
+                    p.x = Math.random() * width; p.y = Math.random() * height;
+                    p.opacity = 0; p.state = 'fadein'; p.slideTime = 0; p.path = [];
+                    p.r = 18 + Math.random() * 27;
+                }
+            }
+
+            if(p.opacity <= 0) return;
+
+            // Draw trail
+            if(p.path.length > 0) {
+                ctx.beginPath();
+                ctx.moveTo(p.path[0].x, p.path[0].y);
+                for(let i=1; i<p.path.length; i++) ctx.lineTo(p.path[i].x, p.path[i].y);
+                ctx.strokeStyle = `rgba(200,230,255,${0.03 * p.opacity})`;
+                ctx.lineWidth = p.r * 0.8;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+
+            // Draw Drop
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            // Elongate slightly while sliding
+            let scaleY = 1 + (p.state === 'slide' ? Math.min(0.3, p.slideTime * 0.005) : 0);
+            ctx.scale(1, scaleY);
+            
+            // Base fill
+            ctx.beginPath();
+            ctx.arc(0, 0, p.r, 0, Math.PI*2);
+            ctx.fillStyle = `rgba(200,230,255,${0.06 * p.opacity})`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(180,220,255,${0.2 * p.opacity})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Specular
+            ctx.beginPath();
+            ctx.arc(0, 0, p.r * 0.8, Math.PI, Math.PI*1.5);
+            ctx.strokeStyle = `rgba(255,255,255,${0.45 * p.opacity})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Shadow
+            ctx.beginPath();
+            ctx.arc(0, 0, p.r * 0.9, 0, Math.PI*0.5);
+            ctx.strokeStyle = `rgba(0,0,80,${0.15 * p.opacity})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function renderSeason() {
+            if (!isRafActive) return;
+            ctx.clearRect(0, 0, width, height);
+            time++;
+
+            if (activeSeason === 'monsoon' || activeSeason === 'storm') {
+                particles.forEach(p => {
+                    if(p.type === 'rain') drawRainDrop(p);
+                    else drawGlassDrop(p);
+                });
+                
+                if(activeSeason === 'storm' && Math.random() < 0.005) {
+                    flash.style.opacity = '0.04';
+                    setTimeout(() => flash.style.opacity = '0', 120);
+                }
+            }
+            else if (activeSeason === 'winter') {
+                particles.forEach(p => {
+                    p.x += Math.sin(time*0.01 + p.seed) * 0.5;
+                    p.y += p.speed;
+                    if(p.y > height) { p.y = -10; p.x = Math.random() * width; }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(220,240,255,${p.alpha})`;
+                    ctx.fill();
+                });
+            }
+            else if (activeSeason === 'spring') {
+                particles.forEach(p => {
+                    p.x += Math.sin(time*0.005 + p.seed) * 0.3;
+                    p.y -= p.speed;
+                    if(p.y < -10) { p.y = height+10; p.x = Math.random() * width; }
+                    let op = 0.5 + Math.sin(time*0.02 + p.phase) * 0.5; // oscillate opacity
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+                    ctx.fillStyle = p.col + (0.35 * op) + ')';
+                    ctx.fill();
+                });
+            }
+            else if (activeSeason === 'autumn') {
+                particles.forEach(p => {
+                    p.x += Math.sin(time*0.01 + p.seed) * 1.5;
+                    p.y += p.speed;
+                    p.rot += p.rotSpeed;
+                    if(p.y > height+20) { p.y = -20; p.x = Math.random() * width; p.seed = Math.random()*100; }
+                    
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot);
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, p.w, p.h, 0, 0, Math.PI*2);
+                    ctx.fillStyle = p.col + p.alpha + ')';
+                    ctx.fill();
+                    // Stem
+                    ctx.beginPath(); ctx.moveTo(0, p.h); ctx.lineTo(0, p.h+4);
+                    ctx.strokeStyle = p.col + p.alpha + ')'; ctx.stroke();
+                    ctx.restore();
+                });
+            }
+            else if (activeSeason === 'summer') {
+                // Heat Haze Direct on Canvas
+                const step = 20;
+                for(let y=0; y<height; y+=step) {
+                    let offset = Math.sin(time * 0.008 + y * 0.003) * 3;
+                    ctx.fillStyle = `rgba(255, 180, 60, 0.015)`;
+                    ctx.fillRect(0, y + offset, width, step);
+                }
+                // Light streaks
+                ctx.save();
+                ctx.rotate(Math.PI / 4);
+                ctx.fillStyle = 'rgba(255,220,100,0.02)';
+                let streakPos = (time * 0.5) % (width*2) - width;
+                ctx.fillRect(streakPos, -height, 60, height*3);
+                ctx.fillRect(streakPos + 200, -height, 40, height*3);
+                ctx.restore();
+            }
+
+            requestAnimationFrame(renderSeason);
+        }
+
+        // Init
+        activeSeason = getDateSeason();
+        applySeasonConfigs();
+        
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            initParticles();
+            requestAnimationFrame(renderSeason);
+            fetchWeatherSeason();
+        }
+
+        // Visibility API for performance
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) { isRafActive = false; } 
+            else { 
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    isRafActive = true; 
+                    requestAnimationFrame(renderSeason); 
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
