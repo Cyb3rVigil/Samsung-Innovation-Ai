@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abhinav Satsangi | CyberVigil Portfolio</title>
-    <meta name="description" content="CyberVigil Portfolio - Abhinav Satsangi / CYB3R.V1GIL. Ethical Hacking, Offensive Security & AI Security.">
+    <meta name="description" content="Abhinav Satsangi — B.Tech CSE student building cybersecurity skills through authorized labs, network defense learning, and AI-assisted workflows.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -47,11 +47,13 @@
             font-family: var(--font-body);
             line-height: 1.85;
             overflow-x: hidden;
-            cursor: none; /* Handled by custom cursor */
         }
         
-        a { color: inherit; text-decoration: none; cursor: none; }
-        button { cursor: none; font-family: inherit; }
+        a { color: inherit; text-decoration: none; }
+        button { cursor: pointer; font-family: inherit; }
+        html.custom-cursor-enabled body,
+        html.custom-cursor-enabled body a,
+        html.custom-cursor-enabled body button { cursor: none; }
         ul { list-style: none; }
 
         /* BACKGROUND LAYERS */
@@ -328,7 +330,9 @@
             .c-dot, .c-ring { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .bg-grid, .bg-blob, .reveal, .c-ring, .logo, .term-cursor { animation: none; transition: none; }
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+            .bg-grid, .bg-blob, .reveal, .c-ring, .logo, .term-cursor { animation: none !important; transition: none !important; }
             .reveal { opacity: 1; transform: none; }
         }
     </style>
@@ -350,7 +354,7 @@
     <!-- HEADER -->
     <header>
         <div class="container nav-inner">
-            <a href="#" class="logo">CYB3R.V1GIL</a>
+            <a href="#hero" class="logo">CYB3R.V1GIL</a>
             <nav class="nav-links">
                 <a href="#about" class="cursor-hover-target">01. About</a>
                 <a href="#skills" class="cursor-hover-target">02. Skills</a>
@@ -375,12 +379,12 @@
                         <span class="dim-line">Build The Future.</span>
                     </h1>
                     <p class="hero-desc">
-                        Ethical Hacker, AI Security Enthusiast, and Computer Science scholar bridging the gap between offensive security and robust system architectures.
+                        Aspiring penetration tester and B.Tech CSE student learning web security, reconnaissance, network defense, and AI-assisted workflows through responsible practice.
                     </p>
                     <div class="hero-stats">
-                        <span>15+ Certs</span>
-                        <span>2 APAC Cohorts</span>
-                        <span>3+ Internships</span>
+                        <span>2 Course Certificates</span>
+                        <span>1 APAC Hackathon</span>
+                        <span>3 Programs / Internships</span>
                         <span>∞ Curiosity</span>
                     </div>
                     <div class="btn-group">
@@ -401,18 +405,16 @@
                             <div class="out">{
   "name": "Abhinav Satsangi",
   "alias": "CYB3R.V1GIL",
-  "role": "Security Researcher",
+  "role": "Aspiring Penetration Tester",
   "location": "Agra, IN",
-  "focus": ["Offensive Sec", "AI"]
+  "focus": ["Recon", "Web Security", "Network Defense"]
 }</div>
-                            <div class="prompt"><span class="cmd">nmap --skills self</span></div>
-                            <div class="out">Starting Nmap 7.93...
-PORT     STATE SERVICE
-80/tcp   open  web-pentest
-443/tcp  open  encryption
-8080/tcp open  api-sec
-3306/tcp open  db-exploit
-9999/tcp open  ai-redteam</div>
+                            <div class="prompt"><span class="cmd">cat learning_status.txt</span></div>
+                            <div class="out">SCOPE: Authorized labs only
+PATH: TryHackMe Jr Penetration Tester
+FOCUS: Recon · Enumeration · Web Security
+MODE: Learning and documenting
+STATUS: IN PROGRESS</div>
                             <div class="prompt"><span class="term-cursor"></span></div>
                         </div>
                     </div>
@@ -427,7 +429,7 @@ PORT     STATE SERVICE
                 <div class="about-text">
                     <p>I am a Computer Science & Engineering undergraduate at IET Khandari (Dr. Bhimrao Ambedkar University), specializing in the intersection of traditional cybersecurity and emerging AI paradigms.</p>
                     <p>Operating under the moniker CyberVigil, I approach security with an offensive mindset—understanding how systems break is the critical first step to building them resiliently.</p>
-                    <p>My methodology is grounded in curiosity and hands-on exploration, transitioning from classical web vulnerabilities to local LLM security and automated reconnaissance tooling.</p>
+                    <p>My current approach is to build fundamentals through structured learning paths and controlled labs, then record what I learned, the evidence, and the defensive lesson.</p>
                 </div>
                 <div class="info-grid">
                     <div class="info-chip">
@@ -440,7 +442,7 @@ PORT     STATE SERVICE
                     </div>
                     <div class="info-chip">
                         <span class="info-label">Specialization</span>
-                        <span class="info-val">Offensive Sec · AI</span>
+                        <span class="info-val">Cybersecurity · AI Fundamentals</span>
                     </div>
                     <div class="info-chip">
                         <span class="info-label">Brand</span>
@@ -459,10 +461,10 @@ PORT     STATE SERVICE
                         <td class="skill-cat">Offensive Security</td>
                         <td>
                             <div class="skill-badges">
-                                <span class="badge primary">Web Pentesting</span>
-                                <span class="badge primary">OWASP Top 10</span>
+                                <span class="badge primary">Web Security Basics</span>
+                                <span class="badge primary">OWASP Concepts</span>
                                 <span class="badge primary">Reconnaissance</span>
-                                <span class="badge primary">Bug Bounty</span>
+                                <span class="badge primary">Bug Bounty Learning</span>
                             </div>
                         </td>
                     </tr>
@@ -552,7 +554,7 @@ PORT     STATE SERVICE
             <h2 class="h-section reveal"><span class="text-primary mono">04.</span> /deployments</h2>
             <div class="proj-grid reveal">
                 <!-- Project 1 -->
-                <a href="#" class="proj-card c-green cursor-hover-target">
+                <article class="proj-card c-green">
                     <div class="proj-vis">
                         <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M0,20 L30,20 L40,30 L100,30 M0,70 L40,70 L50,60 L100,60 M20,0 L20,40 L30,50 M80,100 L80,50 L70,40" stroke="var(--primary)" stroke-width="1" fill="none" />
@@ -563,17 +565,17 @@ PORT     STATE SERVICE
                     </div>
                     <div class="proj-body">
                         <span class="proj-badge">AI Security</span>
-                        <h3 class="proj-title">Private AI Sec Assistant</h3>
-                        <p class="proj-desc">Offline AI agent that inspects web endpoints, identifies flaws, and generates structured markdown patching dossiers without cloud data leakage.</p>
+                        <h3 class="proj-title">AI-Assisted Security Workflows</h3>
+                        <p class="proj-desc">In-progress exploration of AI-agent workflows for learning and organizing security research. Implementation details and capabilities will be documented only when they are demonstrably working.</p>
                         <div class="proj-footer">
                             <span class="proj-status">In Development</span>
                             <span class="proj-link mono">Python, Ollama</span>
                         </div>
                     </div>
-                </a>
+                </article>
                 
                 <!-- Project 2 -->
-                <a href="#" class="proj-card c-cyan cursor-hover-target">
+                <article class="proj-card c-cyan">
                     <div class="proj-vis">
                         <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M0,40 L40,40 L50,20 L100,20 M0,80 L20,80 L30,90 M60,0 L60,30 L70,40 L100,40" stroke="var(--secondary)" stroke-width="1" fill="none" />
@@ -584,17 +586,17 @@ PORT     STATE SERVICE
                     </div>
                     <div class="proj-body">
                         <span class="proj-badge">Web Pentest</span>
-                        <h3 class="proj-title">DBRAU Scholar Pentest</h3>
-                        <p class="proj-desc">Authorized pentest on dbrauscholar.org. Conducted via OWASP Top 10 methodology resulting in a responsibly disclosed full vulnerability dossier.</p>
+                        <h3 class="proj-title">Network Intrusion Detection Learning Project</h3>
+                        <p class="proj-desc">An experimental NIDS dashboard exploring traffic logs, anomaly labels, and model metadata. Detection accuracy and real-world effectiveness have not been independently validated.</p>
                         <div class="proj-footer">
-                            <span class="proj-status">Disclosed</span>
+                            <span class="proj-status">Experimental</span>
                             <span class="proj-link mono">Web, Manual Testing</span>
                         </div>
                     </div>
-                </a>
+                </article>
 
                 <!-- Project 3 -->
-                <a href="#" class="proj-card c-purple cursor-hover-target">
+                <article class="proj-card c-purple">
                     <div class="proj-vis">
                         <svg class="circuit-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                             <path d="M0,50 L20,50 L30,30 L100,30 M0,90 L60,90 L70,70 L100,70 M40,0 L40,60 L30,70" stroke="var(--tertiary)" stroke-width="1" fill="none" />
@@ -605,14 +607,14 @@ PORT     STATE SERVICE
                     </div>
                     <div class="proj-body">
                         <span class="proj-badge">Automation Toolkit</span>
-                        <h3 class="proj-title">CyberVigil Recon Toolkit</h3>
-                        <p class="proj-desc">Modular Python reconnaissance automation integrating subdomain enumeration, port scanning, and structured CLI dossier output.</p>
+                        <h3 class="proj-title">Authorized Reconnaissance Learning Notes</h3>
+                        <p class="proj-desc">A planned learning resource for documenting reconnaissance workflow, interpreting scan output, and writing remediation-oriented lab notes.</p>
                         <div class="proj-footer">
                             <span class="proj-status">Planning Phase</span>
                             <span class="proj-link mono">Python, CLI</span>
                         </div>
                     </div>
-                </a>
+                </article>
             </div>
         </section>
 
@@ -621,15 +623,15 @@ PORT     STATE SERVICE
             <div class="exploring-banner">
                 <div class="exp-header">
                     <div class="exp-pulse"></div>
-                    CURRENTLY EXPLORING
+                    CURRENT LEARNING FOCUS
                 </div>
                 <div class="exp-tags mono">
-                    <span class="exp-tag">CTF Challenges</span>
-                    <span class="exp-tag">Binary Exploitation</span>
-                    <span class="exp-tag">Reverse Engineering</span>
-                    <span class="exp-tag">Bug Bounty Methodology</span>
-                    <span class="exp-tag">Cloud Security (GCP)</span>
-                    <span class="exp-tag">AI Red Teaming</span>
+                    <span class="exp-tag">TryHackMe Jr Penetration Tester</span>
+                    <span class="exp-tag">Reconnaissance &amp; Enumeration</span>
+                    <span class="exp-tag">Web Security Fundamentals</span>
+                    <span class="exp-tag">Linux &amp; Networking</span>
+                    <span class="exp-tag">OSINT Basics</span>
+                    <span class="exp-tag">Cybersecurity with AI Fundamentals</span>
                 </div>
             </div>
         </section>
@@ -641,64 +643,35 @@ PORT     STATE SERVICE
                 <!-- Timeline -->
                 <div class="timeline">
                     <div class="tl-item">
-                        <div class="tl-year">2026 - Current</div>
-                        <h4 class="tl-title">AI/ML Intern</h4>
-                        <div class="tl-org">Flyrank</div>
+                        <div class="tl-year">2026</div>
+                        <h4 class="tl-title">ML Internship Project</h4>
+                        <div class="tl-org">FlyRank</div>
                     </div>
                     <div class="tl-item">
                         <div class="tl-year">2026</div>
-                        <h4 class="tl-title">Offensive Security Program</h4>
-                        <div class="tl-org">APCSIP2026</div>
+                        <h4 class="tl-title">Cyber Security Internship Program</h4>
+                        <div class="tl-org">APCSIP2026 · Certificate of Appreciation for Creative Content</div>
                     </div>
                     <div class="tl-item">
-                        <div class="tl-year">2025</div>
-                        <h4 class="tl-title">Cybersmart & AI Intern</h4>
-                        <div class="tl-org">NIIT Foundation</div>
+                        <div class="tl-year">Program</div>
+                        <h4 class="tl-title">Cyber Smart Internship</h4>
+                        <div class="tl-org">NIIT Foundation · Cybersecurity with AI Fundamentals</div>
                     </div>
                     <div class="tl-item">
-                        <div class="tl-year">2024 - Present</div>
-                        <h4 class="tl-title">BTech CSE</h4>
+                        <div class="tl-year">2025 - Present</div>
+                        <h4 class="tl-title">B.Tech CSE · 2nd Year</h4>
                         <div class="tl-org">IET Khandari, DBRAU</div>
                     </div>
                 </div>
 
                 <!-- Certs -->
-                <div class="certs-grid">
-                    <div class="cert-card">
-                        <div class="cert-icon">🛡️</div>
-                        <div class="cert-info">
-                            <h4 class="cert-name">Ethical Hacker</h4>
-                            <span class="cert-org">Tutedude</span>
-                        </div>
-                    </div>
-                    <div class="cert-card">
-                        <div class="cert-icon">🔒</div>
-                        <div class="cert-info">
-                            <h4 class="cert-name">Cybersecurity Fundamentals</h4>
-                            <span class="cert-org">Tutedude</span>
-                        </div>
-                    </div>
-                    <div class="cert-card">
-                        <div class="cert-icon">🌐</div>
-                        <div class="cert-info">
-                            <h4 class="cert-name">Introduction to IoT</h4>
-                            <span class="cert-org">Stanford CGOE</span>
-                        </div>
-                    </div>
-                    <div class="cert-card">
-                        <div class="cert-icon">☁️</div>
-                        <div class="cert-info">
-                            <h4 class="cert-name">Google Cloud Gen AI Academy</h4>
-                            <span class="cert-org">APAC Edition, Cohorts 2 & 3</span>
-                        </div>
-                    </div>
-                    <div class="cert-card">
-                        <div class="cert-icon">📱</div>
-                        <div class="cert-info">
-                            <h4 class="cert-name">ESSCI Innovation Campus</h4>
-                            <span class="cert-org">Samsung Innovation Campus</span>
-                        </div>
-                    </div>
+                                <div class="certs-grid">
+                    <div class="cert-card"><div class="cert-icon">🛡️</div><div class="cert-info"><h4 class="cert-name">Ethical Hacking</h4><span class="cert-org">Tutedude · Course Certificate</span></div></div>
+                    <div class="cert-card"><div class="cert-icon">🔒</div><div class="cert-info"><h4 class="cert-name">Cybersecurity</h4><span class="cert-org">Tutedude · Course Certificate</span></div></div>
+                    <div class="cert-card"><div class="cert-icon">🤖</div><div class="cert-info"><h4 class="cert-name">AI Fluency: Framework &amp; Foundations</h4><span class="cert-org">Anthropic Academy</span></div></div>
+                    <div class="cert-card"><div class="cert-icon">⌨️</div><div class="cert-info"><h4 class="cert-name">Claude Code-101</h4><span class="cert-org">Anthropic · Certificate of Completion</span></div></div>
+                    <div class="cert-card"><div class="cert-icon">✨</div><div class="cert-info"><h4 class="cert-name">Generative AI Foundations</h4><span class="cert-org">upGrad · Certificate Program</span></div></div>
+                    <div class="cert-card"><div class="cert-icon">🏅</div><div class="cert-info"><h4 class="cert-name">Gen AI APAC 2026</h4><span class="cert-org">Cohort 2 Hackathon · Certificate of Participation</span></div></div>
                 </div>
             </div>
         </section>
@@ -752,7 +725,8 @@ PORT     STATE SERVICE
         let ringY = mouseY;
         let isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-        if (!isTouchDevice && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursorDot && cursorRing && !isTouchDevice && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('custom-cursor-enabled');
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
@@ -764,10 +738,12 @@ PORT     STATE SERVICE
             });
 
             function renderCursor() {
-                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
                 ringX += (mouseX - ringX) * 0.15;
                 ringY += (mouseY - ringY) * 0.15;
-                cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+                cursorRing.style.left = `${ringX}px`;
+                cursorRing.style.top = `${ringY}px`;
                 requestAnimationFrame(renderCursor);
             }
             requestAnimationFrame(renderCursor);
@@ -821,56 +797,30 @@ PORT     STATE SERVICE
         }
 
         // 2. Weather API override
-        async function fetchWeatherSeason() {
-            if (!navigator.geolocation) return;
-            try {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const { latitude, longitude } = pos.coords;
-                        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-                        if (!res.ok) return;
-                        const data = await res.json();
-                        const code = data.current_weather.weathercode;
-                        
-                        let wSeason = activeSeason;
-                        if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) wSeason = 'monsoon';
-                        else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) wSeason = 'winter';
-                        else if (code >= 95 && code <= 99) wSeason = 'storm';
-                        
-                        if (wSeason !== activeSeason) {
-                            activeSeason = wSeason;
-                            applySeasonConfigs();
-                            initParticles();
-                        }
-                    } catch(e) { /* silent fail */ }
-                }, () => { /* silent fail */ }, { timeout: 5000 });
-            } catch(e) { /* silent fail */ }
-        }
-
         const seasonSpecs = {
             'monsoon': {
                 tint: 'rgba(10, 30, 70, 0.12)', blend: 'multiply', grid: 'rgba(100, 160, 255, 0.05)', blob: 'rgba(100, 160, 255, 0.05)',
-                badge: '🌧️ Monsoon · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 120, cssClass: 'season-monsoon'
+                badge: '🌧️ Monsoon', badgeCol: 'var(--secondary)', drops: 10, rain: 120, cssClass: 'season-monsoon'
             },
             'storm': {
                 tint: 'rgba(0, 20, 60, 0.18)', blend: 'multiply', grid: 'rgba(80, 120, 255, 0.05)', blob: 'rgba(80, 120, 255, 0.05)',
-                badge: '⚡ Storm · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 200, cssClass: 'season-storm'
+                badge: '⚡ Storm', badgeCol: 'var(--secondary)', drops: 10, rain: 200, cssClass: 'season-storm'
             },
             'winter': {
                 tint: 'rgba(160, 200, 240, 0.05)', blend: 'screen', grid: 'rgba(180, 210, 255, 0.06)', blob: 'rgba(100, 150, 220, 0.05)',
-                badge: '❄️ Winter · Agra, IN', badgeCol: '#dce8ff', pCount: 60, cssClass: 'season-winter'
+                badge: '❄️ Winter', badgeCol: '#dce8ff', pCount: 60, cssClass: 'season-winter'
             },
             'spring': {
                 tint: 'rgba(20, 180, 100, 0.04)', blend: 'screen', grid: 'rgba(16, 185, 129, 0.055)', blob: 'rgba(16, 185, 129, 0.07)',
-                badge: '🌸 Spring · Agra, IN', badgeCol: '#a7f3d0', pCount: 45, cssClass: 'season-spring'
+                badge: '🌸 Spring', badgeCol: '#a7f3d0', pCount: 45, cssClass: 'season-spring'
             },
             'summer': {
                 tint: 'rgba(255, 160, 40, 0.06)', blend: 'multiply', grid: 'rgba(255, 180, 60, 0.04)', blob: 'rgba(255, 160, 40, 0.05)',
-                badge: '☀️ Summer · Agra, IN', badgeCol: '#fcd34d', pCount: 0, cssClass: 'season-summer'
+                badge: '☀️ Summer', badgeCol: '#fcd34d', pCount: 0, cssClass: 'season-summer'
             },
             'autumn': {
                 tint: 'rgba(180, 80, 20, 0.07)', blend: 'multiply', grid: 'rgba(200, 120, 40, 0.04)', blob: 'rgba(180, 100, 30, 0.05)',
-                badge: '🍂 Autumn · Agra, IN', badgeCol: '#fb923c', pCount: 35, cssClass: 'season-autumn'
+                badge: '🍂 Autumn', badgeCol: '#fb923c', pCount: 35, cssClass: 'season-autumn'
             }
         };
 
@@ -880,7 +830,7 @@ PORT     STATE SERVICE
             tint.style.mixBlendMode = spec.blend;
             document.documentElement.style.setProperty('--grid-line-color', spec.grid);
             document.documentElement.style.setProperty('--bg-blob-color', spec.blob);
-            badge.innerHTML = spec.badge;
+            badge.textContent = spec.badge;
             badge.style.color = spec.badgeCol;
             
             document.body.className = document.body.className.replace(/season-\w+/g, '');
@@ -1119,7 +1069,6 @@ PORT     STATE SERVICE
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             initParticles();
             requestAnimationFrame(renderSeason);
-            fetchWeatherSeason();
         }
 
         // Visibility API for performance
