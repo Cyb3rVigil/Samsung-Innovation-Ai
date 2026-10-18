@@ -47,11 +47,13 @@
             font-family: var(--font-body);
             line-height: 1.85;
             overflow-x: hidden;
-            cursor: none; /* Handled by custom cursor */
         }
         
-        a { color: inherit; text-decoration: none; cursor: none; }
-        button { cursor: none; font-family: inherit; }
+        a { color: inherit; text-decoration: none; }
+        button { cursor: pointer; font-family: inherit; }
+        html.custom-cursor-enabled body,
+        html.custom-cursor-enabled body a,
+        html.custom-cursor-enabled body button { cursor: none; }
         ul { list-style: none; }
 
         /* BACKGROUND LAYERS */
@@ -752,7 +754,8 @@ PORT     STATE SERVICE
         let ringY = mouseY;
         let isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-        if (!isTouchDevice && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursorDot && cursorRing && !isTouchDevice && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.classList.add('custom-cursor-enabled');
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
@@ -764,10 +767,12 @@ PORT     STATE SERVICE
             });
 
             function renderCursor() {
-                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
                 ringX += (mouseX - ringX) * 0.15;
                 ringY += (mouseY - ringY) * 0.15;
-                cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
+                cursorRing.style.left = `${ringX}px`;
+                cursorRing.style.top = `${ringY}px`;
                 requestAnimationFrame(renderCursor);
             }
             requestAnimationFrame(renderCursor);
@@ -850,27 +855,27 @@ PORT     STATE SERVICE
         const seasonSpecs = {
             'monsoon': {
                 tint: 'rgba(10, 30, 70, 0.12)', blend: 'multiply', grid: 'rgba(100, 160, 255, 0.05)', blob: 'rgba(100, 160, 255, 0.05)',
-                badge: '🌧️ Monsoon · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 120, cssClass: 'season-monsoon'
+                badge: '🌧️ Monsoon', badgeCol: 'var(--secondary)', drops: 10, rain: 120, cssClass: 'season-monsoon'
             },
             'storm': {
                 tint: 'rgba(0, 20, 60, 0.18)', blend: 'multiply', grid: 'rgba(80, 120, 255, 0.05)', blob: 'rgba(80, 120, 255, 0.05)',
-                badge: '⚡ Storm · Agra, IN', badgeCol: 'var(--secondary)', drops: 10, rain: 200, cssClass: 'season-storm'
+                badge: '⚡ Storm', badgeCol: 'var(--secondary)', drops: 10, rain: 200, cssClass: 'season-storm'
             },
             'winter': {
                 tint: 'rgba(160, 200, 240, 0.05)', blend: 'screen', grid: 'rgba(180, 210, 255, 0.06)', blob: 'rgba(100, 150, 220, 0.05)',
-                badge: '❄️ Winter · Agra, IN', badgeCol: '#dce8ff', pCount: 60, cssClass: 'season-winter'
+                badge: '❄️ Winter', badgeCol: '#dce8ff', pCount: 60, cssClass: 'season-winter'
             },
             'spring': {
                 tint: 'rgba(20, 180, 100, 0.04)', blend: 'screen', grid: 'rgba(16, 185, 129, 0.055)', blob: 'rgba(16, 185, 129, 0.07)',
-                badge: '🌸 Spring · Agra, IN', badgeCol: '#a7f3d0', pCount: 45, cssClass: 'season-spring'
+                badge: '🌸 Spring', badgeCol: '#a7f3d0', pCount: 45, cssClass: 'season-spring'
             },
             'summer': {
                 tint: 'rgba(255, 160, 40, 0.06)', blend: 'multiply', grid: 'rgba(255, 180, 60, 0.04)', blob: 'rgba(255, 160, 40, 0.05)',
-                badge: '☀️ Summer · Agra, IN', badgeCol: '#fcd34d', pCount: 0, cssClass: 'season-summer'
+                badge: '☀️ Summer', badgeCol: '#fcd34d', pCount: 0, cssClass: 'season-summer'
             },
             'autumn': {
                 tint: 'rgba(180, 80, 20, 0.07)', blend: 'multiply', grid: 'rgba(200, 120, 40, 0.04)', blob: 'rgba(180, 100, 30, 0.05)',
-                badge: '🍂 Autumn · Agra, IN', badgeCol: '#fb923c', pCount: 35, cssClass: 'season-autumn'
+                badge: '🍂 Autumn', badgeCol: '#fb923c', pCount: 35, cssClass: 'season-autumn'
             }
         };
 
@@ -880,7 +885,7 @@ PORT     STATE SERVICE
             tint.style.mixBlendMode = spec.blend;
             document.documentElement.style.setProperty('--grid-line-color', spec.grid);
             document.documentElement.style.setProperty('--bg-blob-color', spec.blob);
-            badge.innerHTML = spec.badge;
+            badge.textContent = spec.badge;
             badge.style.color = spec.badgeCol;
             
             document.body.className = document.body.className.replace(/season-\w+/g, '');
@@ -1119,7 +1124,6 @@ PORT     STATE SERVICE
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             initParticles();
             requestAnimationFrame(renderSeason);
-            fetchWeatherSeason();
         }
 
         // Visibility API for performance
