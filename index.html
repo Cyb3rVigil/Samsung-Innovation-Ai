@@ -330,7 +330,9 @@
             .c-dot, .c-ring { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
-            .bg-grid, .bg-blob, .reveal, .c-ring, .logo, .term-cursor { animation: none; transition: none; }
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+            .bg-grid, .bg-blob, .reveal, .c-ring, .logo, .term-cursor { animation: none !important; transition: none !important; }
             .reveal { opacity: 1; transform: none; }
         }
     </style>
@@ -352,7 +354,7 @@
     <!-- HEADER -->
     <header>
         <div class="container nav-inner">
-            <a href="#" class="logo">CYB3R.V1GIL</a>
+            <a href="#hero" class="logo">CYB3R.V1GIL</a>
             <nav class="nav-links">
                 <a href="#about" class="cursor-hover-target">01. About</a>
                 <a href="#skills" class="cursor-hover-target">02. Skills</a>
@@ -795,32 +797,6 @@ STATUS: IN PROGRESS</div>
         }
 
         // 2. Weather API override
-        async function fetchWeatherSeason() {
-            if (!navigator.geolocation) return;
-            try {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const { latitude, longitude } = pos.coords;
-                        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-                        if (!res.ok) return;
-                        const data = await res.json();
-                        const code = data.current_weather.weathercode;
-                        
-                        let wSeason = activeSeason;
-                        if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) wSeason = 'monsoon';
-                        else if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) wSeason = 'winter';
-                        else if (code >= 95 && code <= 99) wSeason = 'storm';
-                        
-                        if (wSeason !== activeSeason) {
-                            activeSeason = wSeason;
-                            applySeasonConfigs();
-                            initParticles();
-                        }
-                    } catch(e) { /* silent fail */ }
-                }, () => { /* silent fail */ }, { timeout: 5000 });
-            } catch(e) { /* silent fail */ }
-        }
-
         const seasonSpecs = {
             'monsoon': {
                 tint: 'rgba(10, 30, 70, 0.12)', blend: 'multiply', grid: 'rgba(100, 160, 255, 0.05)', blob: 'rgba(100, 160, 255, 0.05)',
