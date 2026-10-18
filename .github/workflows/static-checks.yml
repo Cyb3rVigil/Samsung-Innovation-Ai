@@ -1,0 +1,80 @@
+name: static-checks
+
+on:
+  pull_request:
+  push:
+    branches: ["main", "audit/recheck-batch-1"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-static-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate HTML structure, links, and extract inline scripts
+        run: |
+          python - <<'PY'
+          from collections import Counter
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          class AuditParser(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.ids = []
+                  self.anchors = []
+                  self.inline_scripts = []
+                  self.in_script = False
+                  self.current_script = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if attrs.get("id"):
+                      self.ids.append(attrs["id"])
+                  if tag == "a" and attrs.get("href", "").startswith("#"):
+                      self.anchors.append(attrs["href"][1:])
+                  if tag == "script":
+                      self.in_script = not bool(attrs.get("src"))
+                      self.current_script = []
+              def handle_data(self, data):
+                  if self.in_script:
+                      self.current_script.append(data)
+              def handle_endtag(self, tag):
+                  if tag == "script" and self.in_script:
+                      self.inline_scripts.append("".join(self.current_script))
+                      self.in_script = False
+                      self.current_script = []
+
+          source = Path("index.html").read_text(encoding="utf-8")
+          parser = AuditParser()
+          parser.feed(source)
+          duplicates = [item for item, count in Counter(parser.ids).items() if count > 1]
+          if duplicates:
+              raise SystemExit("Duplicate HTML IDs: " + ", ".join(duplicates))
+          missing = sorted(set(parser.anchors) - set(parser.ids))
+          if missing:
+              raise SystemExit("Broken internal anchors: " + ", ".join(missing))
+          if any(not item.strip() for item in parser.inline_scripts):
+              raise SystemExit("An empty inline script was found")
+          if not parser.inline_scripts:
+              raise SystemExit("No inline page script was found for syntax validation")
+          for i, script in enumerate(parser.inline_scripts):
+              Path(f"/tmp/inline-script-{i}.js").write_text(script, encoding="utf-8")
+          if 'href="#"' in source:
+              raise SystemExit('Placeholder href="#" remains in the page')
+          if "navigator.geolocation" in source or "api.open-meteo.com" in source:
+              raise SystemExit("Decorative page still contains automatic geolocation/weather lookup code")
+          print(f"HTML checks passed; extracted {len(parser.inline_scripts)} inline script(s).")
+          PY
+
+      - name: Check inline JavaScript syntax
+        run: |
+          for script in /tmp/inline-script-*.js; do
+            node --check "$script"
+          done
